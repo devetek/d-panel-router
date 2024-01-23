@@ -47,5 +47,5 @@ jobs:
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           build_command: make build
-          binary_name: dpanel-router
+          binary_name: caddy
           asset_name: "dpanel-router-${{ env.RELEASE_TAG }}-${{ env.OS_NAME }}-${{ matrix.goarch }}"

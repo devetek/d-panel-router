@@ -32,10 +32,13 @@ jobs:
         with:
           repo: "caddyserver/xcaddy"
           version: "tags/v0.3.5"
-          file: "xcaddy_0.3.5_linux_amd64.deb"
+          file: "xcaddy_0.3.5_linux_amd64.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create annotation for build error
-        run: dpkg -i xcaddy_0.3.5_linux_amd64.deb
+      - name: Extract tgz
+        uses: ihiroky/extract-action@v1
+        with:
+          file_path: xcaddy_0.3.5_linux_amd64.tar.gz
+          extract_dir: .
       - uses: wangyoucao577/go-release-action@v1.41
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

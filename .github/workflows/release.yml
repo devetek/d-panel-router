@@ -43,7 +43,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           md5sum: false
-          goversion: 1.24.5
+          goversion: 1.25.9
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           build_command: make build

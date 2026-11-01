@@ -31,25 +31,19 @@ jobs:
       - uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: "caddyserver/xcaddy"
-          version: "tags/v0.4.4"
-          file: "xcaddy_0.4.4_linux_amd64.tar.gz"
+          version: "tags/v0.4.7"
+          file: "xcaddy_0.4.7_linux_amd64.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract tgz
         uses: ihiroky/extract-action@v1
         with:
-          file_path: xcaddy_0.4.4_linux_amd64.tar.gz
+          file_path: xcaddy_0.4.7_linux_amd64.tar.gz
           extract_dir: .
-      # 2. Clone the other repository to a specific directory
-      - name: Clone custom caddyserver-cloudflare repo
-        uses: actions/checkout@v6
-        with:
-          repository: devetek/caddyserver-cloudflare
-          path: caddyserver-cloudflare
       - uses: wangyoucao577/go-release-action@v1.41
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           md5sum: false
-          goversion: 1.25.9
+          goversion: 1.26.10
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           build_command: make build
